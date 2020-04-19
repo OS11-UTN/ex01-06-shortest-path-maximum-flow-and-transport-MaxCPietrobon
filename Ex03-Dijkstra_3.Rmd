@@ -1,0 +1,90 @@
+---
+title: "EX03-SP w Dijkstra"
+author: "Maximiliano Correa Pietrobon"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reticulate)
+```
+
+```{r SetupGrafo}
+#Grafo con Nodos={S,2,3,4,5,T} Arcos = {(S,2);(S,3);(2,4);(2,T);(3,5);(4,T);(5,T) Pesos={2,2,2,5,2,1,2}
+Nodos<-c(1:6)
+DFGrafo<- data.frame(Origen=c(1,1,2,2,3,4,5),Destino=c(2,3,4,6,5,6,6),Pesos=c(2,2,2,5,2,1,2))
+NdoInicial<-1
+NdoFinal<-6
+NdoActual<-NdoInicial
+NdoAnterior<-0
+
+#Inicializo Matriz de Precedencias & Pesos
+DFPePre<-data.frame(I0Peso=c(0,rep(Inf,length(Nodos)-1)), I0Prec=NA, row.names = Nodos)
+NdoVisitados<-c(NdoInicial)
+
+
+
+#Comienzo Ciclo de Iteraciones
+while (NdoActual!=NdoFinal) {
+  ##VectoresPrecedentes
+  WhereNdoDest<-as.vector(which(DFGrafo$Origen==NdoActual, arr.ind = TRUE))
+  NdoDest<-c(DFGrafo[WhereNdoDest,"Destino"])
+  PesoNdoDest<-c(DFGrafo[WhereNdoDest,"Pesos"])
+  NdoOrigen<-c(DFGrafo[WhereNdoDest,"Origen"])
+
+  
+  #copioAnterior
+  AIT_W<-paste("I",NdoAnterior,"Peso",sep = "")
+  AIT_P<-paste("I",NdoAnterior,"Prec",sep = "")
+  NIT_W<-paste("I",NdoActual,"Peso",sep = "")
+  NIT_P<-paste("I",NdoActual,"Prec",sep = "")
+  
+  DFPePre[NIT_W]<-DFPePre[AIT_W]
+  DFPePre[NIT_P]<-DFPePre[AIT_P]
+  
+  for (i in 1:length(Nodos)){
+    
+    if (NdoInicial==i) {NdoVisitados<-c(NdoInicial)} else {NdoVisitados<-c(NdoVisitados,NdoActual)} 
+
+    if (any(i == NdoVisitados)){DFPePre[i,NIT_W]<-NaN ; DFPePre[i,NIT_P]<-NaN}
+  
+    
+    for (k in WhereNdoDest) {
+      VOrigen<-DFGrafo[k,"Origen"]
+      VDestino<-DFGrafo[k,"Destino"]
+      Dacu<-DFPePre[NdoActual,AIT_W]+DFGrafo[k,"Pesos"]
+      #Dest<-DFGrafo[k,"Destino"]
+      if (Dacu<DFPePre[VDestino,AIT_W]) {DFPePre[VDestino,NIT_W]<-Dacu; DFPePre[VDestino,NIT_P]<-VOrigen}
+      }
+    
+  #ActualizoDatos  
+  NdoAnterior<-NdoActual
+  NdoActual<-NdoActual+1
+  }
+}
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
