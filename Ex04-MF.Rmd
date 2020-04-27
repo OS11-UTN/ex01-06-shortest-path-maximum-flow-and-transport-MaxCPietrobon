@@ -5,6 +5,8 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+rm( list=ls() )
+gc()
 knitr::opts_chunk$set(echo = TRUE)
 library(reticulate)
 ```
@@ -43,7 +45,7 @@ NN = np.array ([[0,1,1,0,0,0],
                 [1,0,0,0,0,0]])
 
 #Vector de costos
-C = np.array([-1,-1,-1,-1,-1,-1,-1,-1])
+C = np.array([0,0,0,0,0,0,0,-1])
               
 #Matriz "A" con restricciones de Igual
 Aeq = nn2na(NN)
@@ -65,4 +67,5 @@ print ('## inputs del optimizador ## \n'
 ## Resuelvo Modelo Utilizando "simplex"
 ```{python Run-Optimizador}
 SP = linprog(C,A_eq=Aeq, b_eq=beq,bounds=bounds,method='simplex')
+print(SP)
 ```
